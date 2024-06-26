@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<data>
+
+		<template id="custom_external_layout_background"
+			inherit_id="web.external_layout_background">
+			<xpath
+				expr="//div[hasclass('header')]//div[hasclass('company_address')]//div[1]"
+				position="attributes">
+				<attribute name="style">width:500px;</attribute>
+
+			</xpath>
+			<xpath
+				expr="//div[hasclass('header')]//div[hasclass('company_address')]//div[1]"
+				position="attributes">
+				<attribute name="style">width:500px;</attribute>
+
+			</xpath>
+			<xpath expr="//img" position="attributes">
+				<attribute name="style">max-height:200px
+					!important;max-width:300px !important;
+				</attribute>
+			</xpath>
+			<xpath expr="//span[@t-field='company.partner_id']"
+				position="replace">
+				<div t-if="company.partner_id.street">
+					<span t-field="company.partner_id.street" />
+				</div>
+				<div t-if="company.partner_id.street2">
+					<span t-field="company.partner_id.street2" />
+				</div>
+				<div t-if="company.partner_id.street2">
+					<span t-field="company.partner_id.city" />
+					<span t-field="company.partner_id.state_id.code" />
+					<span t-field="company.partner_id.zip" />
+					<span t-field="company.partner_id.country_id.name" />
+				</div>
+			</xpath>
+			<xpath expr="//div[hasclass('footer')]//div[1]"
+				position="before">
+				<div t-if="docs and docs[0]._name == 'account.invoice'" class="mb32">
+					<div style="border-top:1px solid black;">
+						<span style="margin-left:10px">Accounts Dept </span>
+						<span style="margin-left:230px">Sales Dept </span>
+						<span style="margin-left:230px">Receiver Sign and Date  </span>
+					</div>
+				</div>
+				<div t-elif="docs and docs[0]._name == 'stock.picking'" class="mb32">
+					<div class="mb4 mt4">
+						<span>This is to certify that we received the above-listed items
+							in good condition.</span>
+							
+					</div>
+					<div class="mt16" style="border-top:1px solid black;">
+						<span style="margin-left:10px">Prepared by </span>
+						<span style="margin-left:230px">Verified by </span>
+						<span style="margin-left:230px">Receiver Sign and Date </span>
+					</div>
+				</div>
+				<div t-elif="docs and docs[0]._name == 'purchase.order' and xmlid=='purchase.report_purchaseorder'" class="mb32">
+					<div class="mt16" style="border-top:1px solid black;">
+						<span style="margin-left:10px">Purchase Dept </span>
+						<span style="margin-left:230px">Accounts Dept </span>
+						<span style="margin-left:230px">GM/Authorized </span>
+					</div>
+				</div>
+				<div t-else="">
+				<div class="mb64" style="display: inline-block;width:120px" ></div>
+				</div>
+
+			</xpath>
+		</template>
+	</data>
+</odoo>

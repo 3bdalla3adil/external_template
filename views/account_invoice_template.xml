@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_invoice_document_inherited"
+			priority="1000000" inherit_id="account.report_invoice_document">
+			<xpath expr="//t[@t-set='address']" position="replace" />
+
+
+
+			<xpath expr="//h2[1]" position="after">
+				<div class="row">
+					<div class="col-6">
+						<div t-if="o.partner_id"
+							style="border: 1px solid gray; padding:10px;">
+							<strong>Invoice Address</strong>
+							<div t-if="o.partner_id.name">
+								<span t-esc="o.partner_id.name" />
+							</div>
+							<div t-if="o.partner_id.street">
+								<span t-esc="o.partner_id.street" />
+								<span t-if="o.partner_id.street and o.partner_id.street2"> , </span>
+								<span t-esc="o.partner_id.street2" />
+							</div>
+							<div t-if="o.partner_id.city">
+								<span t-esc="o.partner_id.city" />
+								<span t-if="o.partner_id.city and o.partner_id.country_id"> , </span>
+								<span t-esc="o.partner_id.country_id.name" />
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<div t-if="o.partner_shipping_id"
+							style="border: 1px solid gray;padding:10px; ">
+							<strong>Shipping Address</strong>
+							<div t-if="o.partner_shipping_id">
+								<span t-esc="o.partner_shipping_id.display_name" />
+							</div>
+							<div t-if="o.partner_shipping_id.street">
+								<span t-esc="o.partner_shipping_id.street" />
+							</div>
+							<div t-if="o.partner_shipping_id.city">
+								<span t-esc="o.partner_shipping_id.city" />
+								<span
+									t-if="o.partner_shipping_id.city and o.partner_shipping_id.country_id"> , </span>
+								<span t-esc="o.partner_shipping_id.country_id.name" />
+							</div>
+							<div t-if="o.partner_shipping_id.street2">
+								<span t-esc="o.partner_shipping_id.street2" />
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</xpath>
+
+			<xpath expr="//table[@name='invoice_line_table']//thead//th[8]"
+				position="replace">
+			</xpath>
+			<xpath expr="//table[@name='invoice_line_table']//tbody//td[8]"
+				position="replace">
+			</xpath>
+			<xpath expr="//table[@name='invoice_line_table']//tbody//td[8]"
+				position="replace">
+				<td class="text-right o_price_total">
+					<span t-esc="line.price_subtotal"
+						groups="account.group_show_line_subtotals_tax_excluded" />
+					<span t-esc="line.price_total"
+						groups="account.group_show_line_subtotals_tax_included" />
+				</td>
+			</xpath>
+
+			<xpath expr="//table[@name='invoice_line_table']//thead//th[6]"
+				position="replace">
+				<th
+					t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+					<span> Price</span>
+				</th>
+			</xpath>
+
+			<xpath expr="//h2[1]" position="attributes">
+				<attribute name="class"> float-right
+				</attribute>
+			</xpath>
+			<xpath expr="//div[@id='informations']" position="replace">
+				<div id="informations" class="row"
+					style="margin-left:1.5px;margin-right:1.5px;margin-top:2mm;margin-bottom:2mm;border:1px solid gray; 
+					padding:10px;">
+					<div class="col-auto mw-100 mb-2" t-if="o.name"
+						name="description">
+						<strong>Customer Ref</strong>
+						<p class="m-0" t-field="o.name" />
+					</div>
+					<div class="col-auto mw-100 mb-2" t-if="o.date_invoice"
+						name="invoice_date">
+						<strong>Invoice Date</strong>
+						<p class="m-0" t-field="o.date_invoice" />
+					</div>
+					<div class="col-auto mw-100 mb-2"
+						t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')"
+						name="due_date">
+						<strong>Due Date</strong>
+						<p class="m-0" t-field="o.date_due" />
+					</div>
+					<br />
+					<div class="col-auto mw-100 mb-2" t-if="o.origin" name="origin">
+
+						<strong>Sky Ref</strong>
+						<p class="m-0" t-field="o.origin" />
+					</div>
+					<div class="col-auto mw-100 mb-2" t-if="o.partner_id.ref"
+						name="customer_code">
+						<strong>Customer Code</strong>
+						<p class="m-0" t-field="o.partner_id.ref" />
+					</div>
+				</div>
+			</xpath>
+			<xpath expr="//p[@t-if='o.reference']" position="replace" />
+
+			<xpath expr="//table[@name='invoice_line_table']//tbody//td[5]"
+				position="replace">
+				<td class="text-right">
+					<span t-field="line.quantity" />
+				</td>
+			</xpath>
+			<xpath expr="//table[@name='invoice_line_table']//tbody//td[5]"
+				position="after">
+				<td class="text-left">
+					<span t-field="line.uom_id"  groups="uom.group_uom"/>
+				</td>
+			</xpath>
+			<xpath expr="//table[@name='invoice_line_table']//thead//th[5]"
+				position="after">
+				<th
+					t-attf-class="text-left">
+					<span>UOM</span>
+				</th>
+			</xpath>
+			<xpath expr="//div[@id='total']" position="replace">
+				<div id="total" class="row">
+					<div class="col-8">
+						<div style="border:1px solid #CFCFCF;padding:7px;">
+							<strong>Total in Words:</strong>
+							<span style=" "
+								t-esc="o.currency_id.amount_to_text(o.amount_total)" />
+						</div>
+					</div>
+
+					<div class="col-4">
+						<table class="table table-sm;page-break-inside: avoid;">
+							<tr class="border-black o_subtotal" style="">
+								<td>
+									<strong>Subtotal</strong>
+								</td>
+								<td class="text-right">
+									<span t-field="o.amount_untaxed" />
+								</td>
+							</tr>
+							<t t-foreach="o.amount_by_group" t-as="amount_by_group">
+								<tr style="">
+									<t
+										t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">
+										<td>
+											<span t-esc="amount_by_group[0]" />
+										</td>
+										<td class="text-right o_price_total">
+											<span t-esc="amount_by_group[3]" />
+										</td>
+									</t>
+									<t t-else="">
+										<td>
+											<span t-esc="amount_by_group[0]" />
+											<span>
+												&amp;nbsp;
+												<span>on</span>
+												<t t-esc="amount_by_group[4]" />
+											</span>
+										</td>
+										<td class="text-right o_price_total">
+											<span t-esc="amount_by_group[3]" />
+										</td>
+									</t>
+								</tr>
+							</t>
+							<tr class="border-black o_total">
+								<td>
+									<strong>Total</strong>
+								</td>
+								<td class="text-right">
+									<span t-field="o.amount_total" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+			</xpath>
+			
+
+		</template>
+
+
+
+	</data>
+</odoo>
